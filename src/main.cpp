@@ -1,5 +1,8 @@
 #include <iostream>
 #include <SDL2pp/SDL2pp.hh>
+#include <imgui.h>
+#include <imgui_impl_sdl.h>
+#include <imgui_impl_sdl_renderer.h>
 
 int
 main(int argc, char** argv)
@@ -17,10 +20,25 @@ main(int argc, char** argv)
                 SDL_WINDOW_RESIZABLE};
 
   Renderer renderer{window, -1, SDL_RENDERER_ACCELERATED};
-  bool     done = false;
+
+  // Setup Dear ImGui context
+  IMGUI_CHECKVERSION();
+  ImGui::CreateContext();
+
+  // Setup Dear ImGui style
+  ImGui::StyleColorsDark();
+  // ImGui::StyleColorsClassic();
+
+  // Setup Platform/Renderer backends
+  ImGuiSDL::Initialize(renderer.Get(), windowSz.x, windowSz.y);
+  ImGui_ImplSDL2_InitForOpenGL(window.Get(), nullptr);
+  bool showDemoWindow = false;
+
+  bool done = false;
   while (!done) {
     SDL_Event ev;
     while (SDL_PollEvent(&ev)) {
+      ImGui_ImplSDL2_ProcessEvent(&ev);
       switch (ev.type) {
         case SDL_QUIT:
           done = true;
@@ -39,9 +57,26 @@ main(int argc, char** argv)
           break;
       }
     }
+    // Update UI
+    ImGui_ImplSDL2_NewFrame(window.Get());
+    ImGui::NewFrame();
 
+    if (ImGui::Begin("Settings")) {
+      ImGui::Checkbox("Show demo window", &showDemoWindow);
+    }
+    ImGui::End();
+    if (showDemoWindow) {
+      ImGui::ShowDemoWindow(&showDemoWindow);
+    }
+
+    // Render
     renderer.SetDrawColor(127, 127, 224, 255);
     renderer.FillRect(Point{0, 0}, windowSz);
+
+    // Render UI
+    ImGui::Render();
+    ImGuiSDL::Render(ImGui::GetDrawData());
+
     renderer.Present();
 
     SDL_Delay(1);

@@ -2,7 +2,7 @@
 #include <SDL2pp/SDL2pp.hh>
 #include <imgui.h>
 #include <imgui_impl_sdl.h>
-#include <imgui_impl_sdl_renderer.h>
+#include <imgui_impl_sdlrenderer.h>
 
 int
 main(int argc, char** argv)
@@ -30,8 +30,10 @@ main(int argc, char** argv)
   // ImGui::StyleColorsClassic();
 
   // Setup Platform/Renderer backends
-  ImGuiSDL::Initialize(renderer.Get(), windowSz.x, windowSz.y);
-  ImGui_ImplSDL2_InitForOpenGL(window.Get(), nullptr);
+  ImGui_ImplSDL2_InitForSDLRenderer(window.Get(), renderer.Get());
+  atexit(ImGui_ImplSDL2_Shutdown);
+  ImGui_ImplSDLRenderer_Init(renderer.Get());
+  atexit(ImGui_ImplSDLRenderer_Shutdown);
   bool showDemoWindow = false;
 
   bool done = false;
@@ -58,7 +60,8 @@ main(int argc, char** argv)
       }
     }
     // Update UI
-    ImGui_ImplSDL2_NewFrame(window.Get());
+    ImGui_ImplSDL2_NewFrame();
+    ImGui_ImplSDLRenderer_NewFrame();
     ImGui::NewFrame();
 
     if (ImGui::Begin("Settings")) {
@@ -75,7 +78,7 @@ main(int argc, char** argv)
 
     // Render UI
     ImGui::Render();
-    ImGuiSDL::Render(ImGui::GetDrawData());
+    ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
 
     renderer.Present();
 

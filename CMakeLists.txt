@@ -16,7 +16,7 @@ SET(SDL2PP_WITH_TTF ON) # if you need SDL_ttf support
 FetchContent_Declare(
   DearImgui
   GIT_REPOSITORY https://github.com/ocornut/imgui.git
-  GIT_TAG        v1.88
+  GIT_TAG        v1.89.3
 )
 
 #Make content available
@@ -36,7 +36,7 @@ add_library(DearImguiLib
   ${DearImgui_SOURCE_DIR}/imgui_draw.cpp
   ${DearImgui_SOURCE_DIR}/imgui_tables.cpp
   ${DearImgui_SOURCE_DIR}/imgui_widgets.cpp
-  ${DearImgui_SOURCE_DIR}/backends/imgui_impl_sdl.cpp
+  ${DearImgui_SOURCE_DIR}/backends/imgui_impl_sdl2.cpp
   ${DearImgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer.cpp # Uncomment if using sdl2 renderer
   # ${DearImgui_SOURCE_DIR}/backends/imgui_impl_opengl2.cpp # Uncomment if using opengl2
   # ${DearImgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp # Uncomeent if using opengl3
